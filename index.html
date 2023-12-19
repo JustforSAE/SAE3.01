@@ -46,25 +46,29 @@
     <div id="dataContainer" class="container"></div>
 
     <script>
-        // Fonction pour récupérer les données depuis votre API toutes les minutes
-        function getDataAndUpdateUI() {
-            const apiKey = 'NNSXS.2NGNEVK2PKTUCIQ33JMV4GF635WR5TCWAFMCP5Y.O6UIY4YUGB3ALYQJBSPHMUXOFFI7I6FOUB62O4X7VBMWDU6STFSA';
-            const afterDate = '2023-12-18T14:00:00Z'; // Remplacez avec la date souhaitée
-        
-            fetch(`https://eu1.cloud.thethings.network/api/v3/as/applications/301-ziao-boye/devices/eui-70b3d57ed00620fa/packages/storage/uplink_message?limit=1&after=${afterDate}`, {
-                headers: {
-                    'Authorization': `Bearer ${apiKey}`,
-                    'Accept': 'application/json',
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Données reçues :', data);
-                displayData(data.result.uplink_message.decoded_payload);
-            })
-            .catch(error => console.error('Erreur lors de la récupération des données:', error));
+       // Fonction pour récupérer les données depuis votre API toutes les minutes
+function getDataAndUpdateUI() {
+    const apiKey = 'NNSXS.2NGNEVK2PKTUCIQ33JMV4GF635WR5TCWAFMCP5Y.O6UIY4YUGB3ALYQJBSPHMUXOFFI7I6FOUB62O4X7VBMWDU6STFSA';
+
+    // Obtenir la date actuelle moins 10 minutes au format ISO8601
+    const currentDate = new Date();
+    currentDate.setMinutes(currentDate.getMinutes() - 10);
+    const afterDate = currentDate.toISOString();
+
+    fetch(`https://eu1.cloud.thethings.network/api/v3/as/applications/301-ziao-boye/devices/eui-70b3d57ed00620fa/packages/storage/uplink_message?limit=1&after=${afterDate}`, {
+        headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Accept': 'application/json',
         }
-        
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Données reçues :', data);
+        displayData(data.result.uplink_message.decoded_payload);
+    })
+    .catch(error => console.error('Erreur lors de la récupération des données:', error));
+}
+
 
         // Fonction pour afficher les données récupérées
         function displayData(data) {
